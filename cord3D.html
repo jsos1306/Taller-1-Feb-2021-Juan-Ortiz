@@ -1,0 +1,130 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <title>Figuras 3D</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.min.js"></script>
+    <script>
+		var scene, aspect, camera, renderer;
+		var startTime = Date.now();
+		
+		init();
+		animate();
+	    function Esfera(porc=1) {
+        var sphere = new THREE.Geometry();
+		var zTemp = 0;
+		var resXY = 70.0;
+		var resZ = 800.0;
+		for( var i = 0; i < resZ; i++) {
+			for( var j = 0; j < resXY; j++) {
+				var punto = new THREE.Vector3();
+				punto.x = 2 * Math.cos( ( j * 2 * Math.PI )/resXY) * Math.sin( ( i * Math.PI*porc )/ resZ) ;
+				punto.y = 2 * Math.sin( ( j * 2 * Math.PI )/resXY) * Math.sin( ( i * Math.PI*porc )/ resZ) ;
+				punto.z = 2 * Math.cos( ( i * Math.PI*porc )/resZ) ;
+				sphere.vertices.push( punto );
+                	}
+        }
+        return sphere;
+    }
+		function init(){
+			scene = new THREE.Scene();
+			aspect = window.innerWidth / window.innerHeight;
+			camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+			renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+				  
+			var size = 80;
+			var arrowSize = 1;
+			var divisions = size;
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var x = new THREE.Vector3( 1, 0, 0 );
+			var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+			var color1 = new THREE.Color( 0xFFFFFF );
+		  	var color2 = new THREE.Color( 0x333333 );
+		  	var colorR = new THREE.Color( 0xAA3333 );
+		  	var colorG = new THREE.Color( 0x33AA33 );
+		  	var colorB = new THREE.Color( 0x333366 );
+		  	var axesHelper = new THREE.AxesHelper( size );
+		  	var gridHelperXY = new THREE.GridHelper( size, divisions, color1, color1);
+		  	var gridHelperXZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		  	var gridHelperYZ = new THREE.GridHelper( size, divisions, color2, color2 );
+            gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+            gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+            gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+            var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
+            var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
+            var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
+		    var geoEsfera = Esfera();
+			var gRect= new THREE.BoxGeometry( 3.5, 2, 2 );
+          
+            var Rectangulo = new THREE.Mesh( gRect, mRect );
+
+
+			
+
+	
+
+		  
+
+		
+            var geoCilindro = new THREE.Geometry();
+            var zTemp = 0;
+            var res = 500.0;
+            for( var i = 0; i < res; i++) {
+                for( var j = 0; j < res; j++){
+                    var punto = new THREE.Vector3();
+                    punto.x = 2 * Math.cos( ( j * 5 * Math.PI )/res);
+                    punto.y = 5 * i / res;
+                    punto.z = 2 * Math.sin( ( j * 5 * Math.PI )/res);
+                    geoCilindro.vertices.push( punto );
+                }
+            }
+			
+			  var mRect = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+            var matLinea = new THREE.LineBasicMaterial( { color: 0xFFFFFF } );
+			  var matCilindro = new THREE.LineBasicMaterial( { color: 0x72F300} );
+			  var matEsfera = new THREE.LineBasicMaterial( { color: 0x00F3EF} );
+		
+			var cilindro = new THREE.Line( geoCilindro, matCilindro);
+			 var esfera = new THREE.Line( geoEsfera, matEsfera );
+	
+            scene.add( gridHelperXZ );
+		  	scene.add( arrowX );	
+		  	scene.add( arrowY );	
+		  	scene.add( arrowZ );	
+			scene.add( cilindro );
+			scene.add( esfera );
+			scene.add( Rectangulo );
+			esfera.position.x = 5;
+			esfera.position.y = 1;	 
+		  	esfera.position.z =  0;
+			camera.position.x = 5;
+			camera.position.y = 10;	 
+		  	camera.position.z =  10;
+			Rectangulo.position.x = -5;
+			Rectangulo.position.y = 1;	 
+		  	Rectangulo.position.z =  0;
+		  	camera.lookAt( origin );
+			}
+    
+    function animate() {
+        render();
+        requestAnimationFrame( animate );
+    }
+    
+    function render(){
+        var dtime = Date.now()-startTime;
+        camera.position.x = 10*Math.cos(dtime/10000);
+        camera.position.z = 10*Math.sin(dtime/10000);
+        camera.lookAt( 0, 0, 0 );
+        renderer.render( scene, camera );
+    }
+    </script>
+  </body>
+</html>

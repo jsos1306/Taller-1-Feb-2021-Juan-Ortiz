@@ -1,0 +1,137 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <title>Primitivas</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.min.js"></script>
+    <script>
+	var scene, aspect, camera, renderer;
+	var startTime = Date.now();
+		
+	inici();
+	render();
+	
+	function inici() {
+		scene = new THREE.Scene();
+		aspect = window.innerWidth / window.innerHeight;
+		camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+				  
+		var size = 20;
+		var arrowSize = 1;
+		var divisions = size;
+		var origin = new THREE.Vector3( 0, 0, 0 );
+		var x = new THREE.Vector3( 1, 0, 0 );
+		var y = new THREE.Vector3( 0, 1, 0 );
+	  	var z = new THREE.Vector3( 0, 0, 1 );
+		var color1 = new THREE.Color( 0xFFFFFF );
+	  	var color2 = new THREE.Color( 0x333333 );
+	  	var colorr = new THREE.Color( 0xAA3333 );
+	  	var colorg = new THREE.Color( 0x33AA33 );
+	  	var colorb = new THREE.Color( 0x333366 );
+	  	var axesHelper = new THREE.AxesHelper( size );
+	  	var gridHelperXY = new THREE.GridHelper( size, divisions, color1, color1);
+	  	var gridHelperXZ = new THREE.GridHelper( size, divisions, color2, color2 );
+	  	var gridHelperYZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+		gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+		gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+            
+		
+		var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorr );
+		var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorg );
+		var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorb );
+			
+		
+	
+
+		
+		var gCirculo = new THREE.CircleGeometry( 1, 32 );
+		
+
+	
+        var gPlano = new THREE.PlaneGeometry( 2, 2 );
+		
+		
+		var gRect = new THREE.PlaneGeometry( 4, 2 );
+
+		
+		var gTriangulo = new THREE.Geometry();
+		var v1 = new THREE.Vector3(  2.0,  0.5,  0.0 );
+		var v2 = new THREE.Vector3(  0.5, 2.0,  0.0 );
+		var v3 = new THREE.Vector3( -1.0, 0.5,  0.0 );
+		gTriangulo.vertices.push( v1 );
+		gTriangulo.vertices.push( v2 );
+		gTriangulo.vertices.push( v3 );
+		gTriangulo.faces.push( new THREE.Face3( 0, 1, 2 ) );
+		gTriangulo.computeFaceNormals();
+			
+			
+			var gTrianguloRect = new THREE.Geometry();
+		var v1 = new THREE.Vector3(  2.0,  0.5,  0.0 );
+		var v2 = new THREE.Vector3(  2.0, 2.0,  0.0 );
+		var v3 = new THREE.Vector3( -1.0, 0.5,  0.0 );
+		gTrianguloRect.vertices.push( v1 );
+		gTrianguloRect.vertices.push( v2 );
+		gTrianguloRect.vertices.push( v3 );
+		gTrianguloRect.faces.push( new THREE.Face3( 0, 1, 2 ) );
+		gTrianguloRect.computeFaceNormals();
+	
+		
+
+		
+		
+		var mCirculo = new THREE.MeshBasicMaterial( { color: 0x1DE20D} );
+		var mPlano = new THREE.MeshBasicMaterial( { color: 0xFF0000, side: THREE.DoubleSide } );
+		var mTriangulo = new THREE.MeshBasicMaterial( { color: 0x0D6BE2} );
+		var mRect = new THREE.MeshBasicMaterial( { color: 0xF3EC00, side: THREE.DoubleSide } );
+		
+		var circulo = new THREE.Mesh( gCirculo, mCirculo );
+		circulo.position.x = 0;
+		circulo.position.y = 4;
+		
+		var cuadrado = new THREE.Mesh( gPlano, mPlano );
+		cuadrado.position.x = -3;
+		cuadrado.position.y = 4;
+
+		var triangulo = new THREE.Mesh( gTriangulo, mTriangulo );
+		triangulo.position.x = -7;
+		triangulo.position.y = 3;
+		var rectangulo = new THREE.Mesh( gRect, mRect );
+		rectangulo.position.x = -7;
+		rectangulo.position.y = 1;
+		
+		var triangulorect = new THREE.Mesh( gTrianguloRect, mTriangulo );
+		triangulorect.position.x = -3;
+		triangulorect.position.y = 0;
+
+
+	
+		scene.add( gridHelperXY );	
+		scene.add( arrowX );	
+		scene.add( arrowY );	
+		scene.add( arrowZ );	
+	
+		scene.add( circulo );
+		scene.add( cuadrado );
+		scene.add( triangulo );
+		scene.add( rectangulo );
+		scene.add( triangulorect );
+	 
+		camera.position.z =  15;
+
+		camera.lookAt( origin );
+	}
+		
+	function render(){
+		renderer.render( scene, camera );
+	}
+    </script>
+  </body>
+</html>
